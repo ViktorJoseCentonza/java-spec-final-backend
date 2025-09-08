@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>tags</title>
+    <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/5.0.0/css/bootstrap.min.css}">
+</head>
+
+<body>
+    <th:block th:insert="~{fragments/navbar.html :: navbar}"></th:block>
+    <div class="d-flex align-items-center ms-4 mb-4">
+        <h1 class="inline pe-4">Tags:</h1>
+        <form method="get" th:action="@{/tags/search}" class="d-flex">
+            <input name="query" placeholder="search tags" size="50" th:value="${query}" type="text"
+                class="align-self-center">
+            <button class="btn btn-info align-self-center m-2" type="submit">Search</button>
+        </form>
+    </div>
+
+    <table th:if="${tags.size() > 0}" class="table">
+        <tr th:each="tag : ${tags}">
+            <th th:text="${tag.name}"></th>
+
+            <th sec:authorize="hasAuthority('ADMIN')">
+                <a th:href="@{/tags/{id}(id=${tag.id})}" class="btn btn-primary btn-sm">
+                    info
+                </a>
+            </th>
+
+            <th sec:authorize="hasAuthority('ADMIN')">
+                <a th:href="@{/tags/{id}/edit(id=${tag.id})}" class="btn btn-warning btn-sm">
+                    edit
+                </a>
+            </th>
+
+            <th sec:authorize="hasAuthority('ADMIN')">
+                <form action="#" th:action="@{/tags/{id}/delete(id=${tag.id})}" method="post" data-bs-toggle>
+                    <button type="submit" class="btn btn-danger btn-sm mx-2">delete</button>
+                </form>
+            </th>
+
+
+        </tr>
+    </table>
+    <th:block th:unless="${tags.size() > 0}">
+        <th:block th:insert="fragments/empty.html :: emptyList"></th:block>
+    </th:block>
+</body>
+
+</html>

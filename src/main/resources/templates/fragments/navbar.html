@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>navbar</title>
+    <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/5.0.0/css/bootstrap.min.css}">
+</head>
+
+<body>
+    <header th:fragment="navbar" class="p-4">
+        <div class="d-flex align-items-center">
+            <a href="/" class="btn btn-primary m-2">
+                Home
+            </a>
+
+            <a sec:authorize="hasAuthority('ADMIN')" href="/create" class="btn btn-success m-2">
+                Add new Model
+            </a>
+
+            <a sec:authorize="hasAuthority('ADMIN')" href="/tags" class="btn btn-primary m-2">
+                tags
+            </a>
+
+            <a sec:authorize="hasAuthority('ADMIN')" href="/tags/create" class="btn btn-success m-2">
+                Add new Tag
+            </a>
+
+            <div class="user-info">
+                Logged user: <span th:text="${#authentication.name}" class="fw-bold me-2"></span>
+                Roles: <span th:text="${#authentication.authorities}" class="fst-italic me-2"></span>
+                <a class="btn btn-sm btn-outline-primary" href="/logout">sign out</a>
+            </div>
+
+            <form method="get" th:action="@{/search}" class="ms-auto">
+                <input name="query" placeholder="search by model name or tag" size="50" th:value="${query}" type="text">
+                <button class="btn btn-info" type="submit">Search</button>
+            </form>
+        </div>
+
+    </header>
+</body>
+
+</html>

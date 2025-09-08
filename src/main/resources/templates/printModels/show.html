@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>printModel</title>
+    <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/5.0.0/css/bootstrap.min.css}">
+</head>
+
+<body>
+    <th:block th:insert="~{fragments/navbar.html :: navbar}"></th:block>
+    <th:block th:object="${printModel}">
+
+        <section class="d-flex justify-content-between">
+            <div class="d-flex">
+                <div>
+                    <h1>[[*{name}]]</h1>
+                    <div>
+                        <span>[[*{description}]]</span>
+                        <div class="d-flex" sec:authorize="hasAuthority('ADMIN')">
+                            <a th:href="@{/printModels/{id}/edit(id=${printModel.id})}"
+                                class="btn btn-warning btn-sm ms-2">
+                                edit
+                            </a>
+
+                            <form action="#" th:action="@{/printModels/{id}/delete(id=${printModel.id})}" method="post">
+                                <button type="submit" class="btn btn-danger btn-sm">delete</button>
+                            </form>
+                        </div>
+
+                        <th:block th:replace="fragments/tagListButtons :: tagListButtons(${printModel.tags})">
+                        </th:block>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <img class="img-fluid img-thumbnail w-25 m-4" th:src="@{*{image_url}}" alt="foto-printModel">
+
+        </section>
+
+
+
+
+
+
+    </th:block>
+
+
+</body>
+
+</html>
