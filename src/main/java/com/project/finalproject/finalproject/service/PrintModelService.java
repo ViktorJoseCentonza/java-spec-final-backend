@@ -30,6 +30,10 @@ public class PrintModelService {
         return printModelRepository.findByNameContainingIgnoreCaseOrTags_NameContainingIgnoreCase(query, query);
     }
 
+    public Optional<PrintModel> findByNameExact(String query) {
+        return printModelRepository.findByNameIgnoreCase(query);
+    }
+
     public PrintModel create(PrintModel printModel) {
         return printModelRepository.save(printModel);
     }

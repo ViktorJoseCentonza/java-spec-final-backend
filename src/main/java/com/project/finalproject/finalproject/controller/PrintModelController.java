@@ -6,18 +6,19 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.project.finalproject.finalproject.model.PrintModel;
 import com.project.finalproject.finalproject.repository.TagRepository;
 import com.project.finalproject.finalproject.service.PrintModelService;
+
 import jakarta.validation.Valid;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
 @RequestMapping("/")
@@ -73,6 +74,13 @@ public class PrintModelController {
             model.addAttribute("tags", tagRepository.findAll());
             return "printModels/create";
         }
+
+        Optional<PrintModel> existingPrintModel = printModelService.findByNameExact(printModelForm.getName());
+        if (existingPrintModel.isPresent()) {
+            bindingResult.rejectValue("name", "error", "A PrintModel with this name already exists.");
+            model.addAttribute("tags", tagRepository.findAll());
+            return "printModels/create";
+        }
         printModelService.create(printModelForm);
         return "redirect:/";
     }
@@ -84,6 +92,8 @@ public class PrintModelController {
         if (printModelAttempt.isEmpty()) {
             return "notFound";
         }
+        model.addAttribute("originalName", printModelAttempt.get().getName()); // used to avoid edit page title updating
+                                                                               // with duplicate name
         model.addAttribute("printModel", printModelAttempt.get());
 
         model.addAttribute("tags", tagRepository.findAll());
@@ -101,6 +111,14 @@ public class PrintModelController {
         Optional<PrintModel> printModelAttempt = printModelService.findById(printModelForm.getId());
         if (printModelAttempt.isEmpty()) {
             return "notFound";
+        }
+
+        Optional<PrintModel> existingPrintModel = printModelService.findByNameExact(printModelForm.getName());
+        if (existingPrintModel.isPresent()
+                && !existingPrintModel.get().getId().equals(printModelAttempt.get().getId())) {
+            bindingResult.rejectValue("name", "error", "A PrintModel with this name already exists.");
+            model.addAttribute("originalName", printModelAttempt.get().getName());
+            return "printModels/edit";
         }
 
         printModelService.update(printModelForm);

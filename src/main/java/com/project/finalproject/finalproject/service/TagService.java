@@ -2,8 +2,10 @@ package com.project.finalproject.finalproject.service;
 
 import java.util.List;
 import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import com.project.finalproject.finalproject.model.Tag;
 import com.project.finalproject.finalproject.repository.TagRepository;
 
@@ -24,6 +26,10 @@ public class TagService {
 
     public List<Tag> findByName(String query) {
         return TagRepository.findByNameContainingIgnoreCase(query);
+    }
+
+    public Optional<Tag> findByNameExact(String query) {
+        return TagRepository.findByNameIgnoreCase(query);
     }
 
     public Tag create(Tag tag) {

@@ -11,7 +11,7 @@
 <body>
     <th:block th:insert="~{fragments/navbar.html :: navbar}"></th:block>
 
-    <h1 class="m-2" th:text="'Editing model: '+${printModel.name}"></h1>
+    <h1 class="m-2" th:text="'Editing model: '+${originalName}"></h1>
 
     <form class="row g-3 m-2" id="printModel-form" th:action="@{/printModels/{id}/edit(id = ${printModel.id})}"
         th:object="${printModel}" method="post">
