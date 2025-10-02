@@ -29,7 +29,8 @@
                             </form>
                         </div>
 
-                        <th:block th:replace="fragments/tagListButtons :: tagListButtons(${printModel.tags})">
+                        <th:block
+                            th:replace="~{fragments/tagListButtons :: tagListButtons(${printModel.tags},${printModel})}">
                         </th:block>
                     </div>
 

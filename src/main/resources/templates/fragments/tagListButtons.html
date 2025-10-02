@@ -9,7 +9,7 @@
 
 <body>
 
-    <th:block th:fragment="tagListButtons(tags)">
+    <th:block th:fragment="tagListButtons(tags,model)">
 
 
         <div th:if="${not #lists.isEmpty(tags)}">
@@ -30,8 +30,10 @@
                     </td>
 
                     <td sec:authorize="hasAuthority('ADMIN')">
-                        <form action="#" th:action="@{/tags/{id}/delete(id=${tag.id})}" method="post">
-                            <button type="submit" class="btn btn-danger btn-sm">delete</button>
+                        <form action="#"
+                            th:action="@{/tags/{tagId}/unbind/{modelId}(tagId=${tag.id}, modelId=${model.id})}"
+                            method="post">
+                            <button type="submit" class="btn btn-danger btn-sm">remove</button>
                         </form>
                     </td>
 

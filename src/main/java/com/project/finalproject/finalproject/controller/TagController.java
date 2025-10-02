@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.project.finalproject.finalproject.model.PrintModel;
 import com.project.finalproject.finalproject.model.Tag;
+import com.project.finalproject.finalproject.service.PrintModelService;
 import com.project.finalproject.finalproject.service.TagService;
 
 import jakarta.validation.Valid;
@@ -25,6 +27,8 @@ public class TagController {
 
     @Autowired
     private TagService tagService;
+    @Autowired
+    private PrintModelService printModelService;
 
     @GetMapping()
     public String index(Model model) {
@@ -110,6 +114,17 @@ public class TagController {
         return "redirect:/tags";
     }
 
+    @PostMapping("/{tagId}/unbind/{modelId}")
+    public String unbind(@PathVariable Integer tagId, @PathVariable Integer modelId) {
+        Tag tag = tagService.findById(tagId).orElseThrow();
+        PrintModel model = printModelService.findById(modelId).orElseThrow();
+
+        model.getTags().remove(tag);
+        printModelService.update(model);
+
+        return "redirect:/printModels/" + modelId;
+    }
+
     @PostMapping("/{id}/delete")
     public String delete(@PathVariable Integer id) {
 
@@ -117,7 +132,13 @@ public class TagController {
         if (tagAttempt.isEmpty()) {
             return "notFound";
         }
-        tagService.delete(tagAttempt.get());
+        Tag tag = tagAttempt.get();
+        for (PrintModel model : tag.getPrintModels()) {
+            model.getTags().remove(tag);
+            printModelService.update(model);
+        }
+        tagService.delete(tag);
+
         return "redirect:/tags";
     }
 
