@@ -26,7 +26,7 @@ public class SecurityConfiguration {
                         .requestMatchers("/create", "/edit/**").hasAuthority("ADMIN")
                         .requestMatchers(HttpMethod.POST, "/**").hasAuthority("ADMIN")
                         .requestMatchers("/api/printModels", "/api/printModels/**",
-                                "/api/tags", "/api/tags/**")
+                                "/api/tags", "/api/tags/**", "/api/search/**")
                         .permitAll()
                         .requestMatchers("/**").hasAnyAuthority("USER", "ADMIN"))
                 .formLogin(Customizer.withDefaults());
