@@ -35,11 +35,18 @@ public class PrintModelService {
     }
 
     public PrintModel create(PrintModel printModel) {
+        String imageUrl = printModel.getImage_url();
+        if (!imageUrl.startsWith("http://") && !imageUrl.startsWith("https://")) {
+            printModel.setImage_url("http://" + imageUrl);
+        }
         return printModelRepository.save(printModel);
     }
 
     public PrintModel update(PrintModel printModel) {
-
+        String imageUrl = printModel.getImage_url();
+        if (!imageUrl.startsWith("http://") && !imageUrl.startsWith("https://")) {
+            printModel.setImage_url("http://" + imageUrl);
+        }
         return printModelRepository.save(printModel);
     }
 
